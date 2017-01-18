@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.util.Log;
 
 import org.apache.http.HttpEntity;
@@ -61,6 +62,7 @@ public class StyleService extends Service
                     public void onChange(boolean selfChange)
                     {
                         Log.d("ScratchService", "External Media has been added");
+                        Debug.passDebugNotification(StyleService.this, "External media added");
                         onMediaChanged();
                         super.onChange(selfChange);
                     }
@@ -73,6 +75,7 @@ public class StyleService extends Service
                     public void onChange(boolean selfChange)
                     {
                         Log.d("ScratchService", "Internal Media has been added");
+                        Debug.passDebugNotification(StyleService.this, "Internal media added");
                         onMediaChanged();
                         super.onChange(selfChange);
                     }
