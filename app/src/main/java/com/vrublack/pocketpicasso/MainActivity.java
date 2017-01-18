@@ -7,6 +7,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+
 public class MainActivity extends AppCompatActivity
 {
 
@@ -23,4 +25,5 @@ public class MainActivity extends AppCompatActivity
 
         startService(new Intent(this, StyleService.class));
     }
+
 }

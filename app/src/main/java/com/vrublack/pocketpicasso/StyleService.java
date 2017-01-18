@@ -68,20 +68,6 @@ public class StyleService extends Service
                     }
                 }
         );
-        getContentResolver().registerContentObserver(android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI, true,
-                new ContentObserver(new Handler())
-                {
-                    @Override
-                    public void onChange(boolean selfChange)
-                    {
-                        Log.d("ScratchService", "Internal Media has been added");
-                        Debug.passDebugNotification(StyleService.this, "Internal media added");
-                        onMediaChanged();
-                        super.onChange(selfChange);
-                    }
-                }
-        );
-
     }
 
     private void onMediaChanged()
@@ -94,7 +80,7 @@ public class StyleService extends Service
             takenTime = System.currentTimeMillis();
 
             // picture was added
-            doFileUpload(latest);
+            ServerHandler.uploadImage(latest, Util.getPref(this, Const.FCM_TOKEN));
         }
     }
 
@@ -116,59 +102,5 @@ public class StyleService extends Service
             }
         }
         return lastModifiedFile;
-    }
-
-    private void doFileUpload(File file)
-    {
-        new UploadTask().execute(file);
-    }
-
-    private class UploadTask extends AsyncTask<File, Void, Void>
-    {
-        @Override
-        protected Void doInBackground(File... file)
-        {
-            System.out.println("Sending file to server: " + file[0]);
-
-            String urlString = "http://52.91.8.206:5000/upload";
-            try
-            {
-                int timeout = 60 * 10 * 1000; // 10 minutes
-                HttpClient client = new DefaultHttpClient();
-                HttpParams params = client.getParams();
-                HttpConnectionParams.setConnectionTimeout(params, timeout);
-                HttpConnectionParams.setSoTimeout(params, timeout);
-                HttpPost post = new HttpPost(urlString);
-                FileBody bin1 = new FileBody(file[0]);
-                MultipartEntity reqEntity = new MultipartEntity();
-                reqEntity.addPart("uploadedfile1", bin1);
-                reqEntity.addPart("user", new StringBody("User"));
-                post.setEntity(reqEntity);
-                HttpResponse response = client.execute(post);
-                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) response.getEntity().getContent());
-                setBackgroundPicture(bitmap);
-            } catch (Exception ex)
-            {
-                Log.e("Debug", "error: " + ex.getMessage(), ex);
-            }
-
-            return null;
-        }
-    }
-
-    private void setBackgroundPicture(Bitmap bitmap)
-    {
-        System.out.println("Setting background picture. " + (System.currentTimeMillis() + takenTime) / 1000 + " seconds elapsed.");
-
-        WallpaperManager myWallpaperManager
-                = WallpaperManager.getInstance(getApplicationContext());
-        try
-        {
-            myWallpaperManager.setBitmap(bitmap);
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
     }
 }
