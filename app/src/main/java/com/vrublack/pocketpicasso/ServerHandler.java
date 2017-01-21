@@ -24,7 +24,7 @@ import java.net.URL;
 
 public class ServerHandler
 {
-    private static final String SERVER_IP = "54.161.15.253";
+    private static final String SERVER_NAME = "pocketpicasso.dynu.com";
 
     private Context c;
 
@@ -38,7 +38,7 @@ public class ServerHandler
     {
         try
         {
-            String url = "http://" + SERVER_IP + ":5000/static/tmp-images/" + filename;
+            String url = "http://" + SERVER_NAME + ":5000/static/tmp-images/" + filename;
             HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
             connection.setDoInput(true);
             connection.connect();
@@ -70,7 +70,7 @@ public class ServerHandler
     public static void sendRegistrationToServer(String token)
     {
         HttpClient client = buildClient();
-        String urlString = "http://" + SERVER_IP + ":5000/register_fcm_token";
+        String urlString = "http://" + SERVER_NAME + ":5000/register_fcm_token";
         HttpPost post = new HttpPost(urlString);
         post.setHeader("fcm-token", token);
         try
@@ -92,7 +92,7 @@ public class ServerHandler
 
             System.out.println("Sending file to server: " + file);
 
-            String urlString = "http://" + SERVER_IP + ":5000/upload";
+            String urlString = "http://" + SERVER_NAME + ":5000/upload";
             try
             {
                 HttpClient client = buildClient();

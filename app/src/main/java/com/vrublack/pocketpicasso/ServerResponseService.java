@@ -18,13 +18,14 @@ public class ServerResponseService extends FirebaseMessagingService
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage)
     {
+        Util.cancelAllNotif(this);
+
         String fname = remoteMessage.getData().get("result");
         String paintingName = remoteMessage.getData().get("painting-name");
         ServerHandler serverHandler = new ServerHandler(this);
         Bitmap pic = serverHandler.loadPic(fname);
         setBackgroundPicture(pic);
         saveToFile(pic, getFilename(paintingName));
-        Util.cancelAllNotif(this);
     }
 
     private String getFilename(String paintingName)
