@@ -21,7 +21,7 @@ public class Debug
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(c)
-                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_notif)
                         .setContentTitle("PocketPicasso DEBUG")
                         .setContentText(message);
         NotificationManager mNotificationManager =
@@ -33,6 +33,9 @@ public class Debug
 
     public static void d(String msg)
     {
+        if (!DEBUG)
+            return;
+
         Log.d(TAG, msg);
     }
 }

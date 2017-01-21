@@ -11,4 +11,35 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.vrublack.pocketpicasso.MainActivity">
 
+    <Button
+        android:id="@+id/upload_latest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/upload_latest"/>
+
+    <Button
+        android:id="@+id/choose_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="57dp"
+        android:layout_marginStart="57dp"
+        android:layout_toEndOf="@+id/upload_latest"
+        android:layout_toRightOf="@+id/upload_latest"
+        android:text="@string/choose_image"/>
+
+    <Switch
+        android:id="@+id/auto_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="74dp"
+        android:text="@string/auto_upload"
+        android:checked="false"/>
 </RelativeLayout>

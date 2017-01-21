@@ -1,12 +1,11 @@
 package com.vrublack.pocketpicasso;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.util.Pair;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -25,9 +24,17 @@ import java.net.URL;
 
 public class ServerHandler
 {
-    private static final String SERVER_IP = "52.90.143.95";
+    private static final String SERVER_IP = "54.161.15.253";
 
-    public static Bitmap loadPic(String filename)
+    private Context c;
+
+
+    public ServerHandler(Context c)
+    {
+        this.c = c;
+    }
+
+    public Bitmap loadPic(String filename)
     {
         try
         {
@@ -44,14 +51,14 @@ public class ServerHandler
         }
     }
 
-    public static void uploadImage(File file, String fcmToken)
+    public void uploadImage(File file)
     {
-        new UploadTask().execute(new Pair<File, String>(file, fcmToken));
+        new UploadTask().execute(file);
     }
 
     private static HttpClient buildClient()
     {
-        int timeout = 60 * 10 * 1000; // 10 minutes
+        int timeout = 2000;
         HttpClient client = new DefaultHttpClient();
         HttpParams params = client.getParams();
         HttpConnectionParams.setConnectionTimeout(params, timeout);
@@ -75,13 +82,13 @@ public class ServerHandler
         }
     }*/
 
-    private static class UploadTask extends AsyncTask<Pair<File, String>, Void, Void>
+    private class UploadTask extends AsyncTask<File, Void, Void>
     {
         @Override
-        protected Void doInBackground(Pair<File, String>... p)
+        protected Void doInBackground(File... p)
         {
-            File file = p[0].first;
-            String fcmToken = p[0].second;
+            File file = p[0];
+            String fcmToken = Util.getPrefS(c, Const.FCM_TOKEN);
 
             System.out.println("Sending file to server: " + file);
 
@@ -99,9 +106,11 @@ public class ServerHandler
                 // has rendered the image
                 post.setHeader(Const.FCM_TOKEN, fcmToken);
                 client.execute(post);
+                Util.notifyOngoing(c, "Rendering Image", "Image sent to server, waiting for result");
             } catch (Exception ex)
             {
                 Log.e("Debug", "error: " + ex.getMessage(), ex);
+                Debug.passDebugNotification(c, "Request failed: " + ex.toString());
             }
 
             return null;
